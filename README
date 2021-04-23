@@ -1,0 +1,20 @@
+TOGOE-DULCU ANDREEA-CRISTINA 322 CB  TEMA 1 PROTOCOALE DE COMUNICARE
+
+	In while primesc pachete si verific ce tip au. 
+	Daca pachetul primit este ARP atunci verific daca am primit un ARP Request.
+Atunci raspund cu un pachet ARP Reply cu adresa mea Ip. Daca primesc un 
+ARP Reply, imi updatez lista de arp_table si incerc sa trimit pachetele din 
+coada de asteptare care se potrivesc cu raspunsul primit.
+	Daca pachetul nu e ARP, atunci ii verific TTL-ul sa fie mai mare ca 1, iar 
+daca nu e atunci trimit inapoi un pachet ICMP time limit exceeded. Daca TTL e 
+ok atunci calculez checksum-ul iar in cazul in care nu e corect arunc pachetul.
+Daca e corect, verific daca eu sunt destinatarul pachetului, caz in care trimit
+inapoi un echo reply. Daca nu eu sunt destinatarul atunci caut in tabela de 
+rutare un next_hop care sa satisfaca formula (prefix & ip_primit == masca). 
+Daca nu gasesc un next hop atunci trimit inapoi un pachet ICMP host 
+unreachable. Daca il gasesc, returnez elementul si apoi caut next_hop-ul gasit 
+in tabela ARP. Daca nu gasesc nimic in tabela atunci trimit pe interfata pe 
+care trebuie transmis pachetul un ARP Request si urmeaza sa trimit pachetul la 
+destinatie dupa ce voi primi ARP Reply.
+	Daca il gasesc in arp_table, atunci schimb adresa MAC din ether header cu 
+a mea si decrementez ttl-ul, recalculez checksum-ul si trimit pachetul.
